@@ -1,4 +1,4 @@
-var barjisRemote = require('../remote/BarjisRemote');
+var barjisRemote = require('../remote/barjisRemote');
 
 module.exports = function(app) {
 	return new Handler(app);

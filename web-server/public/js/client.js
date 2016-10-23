@@ -251,7 +251,7 @@ $(document).ready(function() {
 
 	//deal with barjis mode.
 	$("#entry").keypress(function(e) {
-		var route = "chat.chatHandler.send";
+		var route = "barjis.barjisHandler.send";
 		var target = $("#usersList").val();
 		if(e.keyCode != 13 /* Return */ ) return;
 		var msg = $("#entry").attr("value").replace("\n", "");

@@ -1,8 +1,8 @@
 module.exports = function(app) {
-	return new BarjisRemote(app);
+	return new barjisRemote(app);
 };
 
-var BarjisRemote = function(app) {
+var barjisRemote = function(app) {
 	this.app = app;
 	this.channelService = app.get('channelService');
 };
@@ -16,7 +16,8 @@ var BarjisRemote = function(app) {
  * @param {boolean} flag channel parameter
  *
  */
-BarjisRemote.prototype.add = function(uid, sid, name, flag, cb) {
+barjisRemote.prototype.add = function(uid, sid, name, flag, cb) {
+
 	var channel = this.channelService.getChannel(name, flag);
 	var username = uid.split('*')[0];
 	var param = {
@@ -41,7 +42,7 @@ BarjisRemote.prototype.add = function(uid, sid, name, flag, cb) {
  * @return {Array} users uids in channel
  *
  */
-BarjisRemote.prototype.get = function(name, flag) {
+barjisRemote.prototype.get = function(name, flag) {
 	var users = [];
 	var channel = this.channelService.getChannel(name, flag);
 	if( !! channel) {
@@ -61,7 +62,7 @@ BarjisRemote.prototype.get = function(name, flag) {
  * @param {String} name channel name
  *
  */
-BarjisRemote.prototype.kick = function(uid, sid, name, cb) {
+barjisRemote.prototype.kick = function(uid, sid, name, cb) {
 	var channel = this.channelService.getChannel(name, false);
 	// leave channel
 	if( !! channel) {
@@ -73,5 +74,8 @@ BarjisRemote.prototype.kick = function(uid, sid, name, cb) {
 		user: username
 	};
 	channel.pushMessage(param);
+	if(channel.getMembers()>=2){
+
+	}
 	cb();
 };

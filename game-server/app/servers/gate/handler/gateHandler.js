@@ -1,4 +1,5 @@
 var dispatcher = require('../../../util/dispatcher');
+var rooms=require('../../../util/rooms');
 
 module.exports = function(app) {
 	return new Handler(app);
@@ -7,10 +8,7 @@ module.exports = function(app) {
 var Handler = function(app) {
 	this.app = app;
 };
-var roomIndex=1;
-var usrsCount=0;
 var handler = Handler.prototype;
-
 /**
  * Gate handler that dispatch user to connectors.
  *
@@ -42,11 +40,10 @@ handler.queryEntry = function(msg, session, next) {
 		code: 200,
 		host: res.host,
 		port: res.clientPort,
-		room:'Room-'+roomIndex
+		room:rooms.getAvailableRoom()
+
 	});
-	usrsCount++;
-	if(usrsCount==2){
-		roomIndex++;
-		usrsCount=0;
-	}
+
 };
+
+

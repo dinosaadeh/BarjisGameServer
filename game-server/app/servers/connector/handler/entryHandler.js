@@ -17,9 +17,10 @@ var handler = Handler.prototype;
  * @return {Void}
  */
 handler.enter = function(msg, session, next) {
+
 	var self = this;
-	var rid = msg.rid;
-	var uid = msg.uindex + '*' + rid
+	var rid = msg.room;
+	var uid = msg.username.toString().concat('*').concat(rid);
 	var sessionService = self.app.get('sessionService');
 
 	//duplicate log in
@@ -43,7 +44,8 @@ handler.enter = function(msg, session, next) {
 	//put user into channel
 	self.app.rpc.barjis.barjisRemote.add(session, uid, self.app.get('serverId'), rid, true, function(users){
 		next(null, {
-			users:users
+			users:users,
+			room:rid
 		});
 	});
 
