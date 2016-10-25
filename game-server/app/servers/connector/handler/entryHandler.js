@@ -1,9 +1,11 @@
-module.exports = function(app) {
-	return new Handler(app);
+var rooms = require('../../../util/rooms');
+
+module.exports = function (app) {
+    return new Handler(app);
 };
 
-var Handler = function(app) {
-	this.app = app;
+var Handler = function (app) {
+    this.app = app;
 };
 
 var handler = Handler.prototype;
@@ -19,7 +21,7 @@ var handler = Handler.prototype;
 handler.enter = function(msg, session, next) {
 
 	var self = this;
-	var rid = msg.room;
+	var rid = rooms.getAvailableRoom();
 	var uid = msg.username.toString().concat('*').concat(rid);
 	var sessionService = self.app.get('sessionService');
 
@@ -41,13 +43,14 @@ handler.enter = function(msg, session, next) {
 	});
 	session.on('closed', onUserLeave.bind(null, self.app));
 
-	//put user into channel
-	self.app.rpc.barjis.barjisRemote.add(session, uid, self.app.get('serverId'), rid, true, function(users){
-		next(null, {
-			users:users,
-			room:rid
-		});
-	});
+
+        //put user into channel
+        self.app.rpc.barjis.barjisRemote.add(session, uid, self.app.get('serverId'), rid, true,rooms.userShouldWait(), function (users) {
+            next(null, {
+                users: users,
+                room: rid
+            });
+        });
 
 };
 

@@ -1,5 +1,4 @@
 var dispatcher = require('../../../util/dispatcher');
-var rooms=require('../../../util/rooms');
 
 module.exports = function(app) {
 	return new Handler(app);
@@ -39,9 +38,7 @@ handler.queryEntry = function(msg, session, next) {
 	next(null, {
 		code: 200,
 		host: res.host,
-		port: res.clientPort,
-		room:rooms.getAvailableRoom()
-
+		port: res.clientPort
 	});
 
 };

@@ -18,4 +18,10 @@ function getAvailableRoomId(){
     return returnedRoom;
 }
 
-module.exports=getAvailableRoomId;
+function userShouldWait(){
+    return (availableRoom!=undefined)
+}
+
+
+module.exports.userShouldWait=userShouldWait;
+module.exports.getAvailableRoom=getAvailableRoomId;
