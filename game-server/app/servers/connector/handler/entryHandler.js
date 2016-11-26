@@ -65,5 +65,10 @@ var onUserLeave = function(app, session) {
 	if(!session || !session.uid) {
 		return;
 	}
-	app.rpc.barjis.barjistRemote.kick(session, session.uid, app.get('serverId'), session.get('rid'), null);
+
+	if(rooms.userShouldWait()) {
+        rooms.resetRoom();
+    }
+
+	app.rpc.barjis.barjisRemote.close(session, session.uid, app.get('serverId'), session.get('rid'), null);
 };

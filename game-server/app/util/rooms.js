@@ -21,7 +21,10 @@ function getAvailableRoomId(){
 function userShouldWait(){
     return (availableRoom!=undefined)
 }
-
+function resetRoom() {
+    availableRoom=undefined;
+}
 
 module.exports.userShouldWait=userShouldWait;
 module.exports.getAvailableRoom=getAvailableRoomId;
+module.exports.resetRoom=resetRoom;
