@@ -22,18 +22,26 @@ handler.send = function(msg, session, next) {
 	var rid = session.get('rid');
 	var username = session.uid.split('*')[0];
 	var channelService = this.app.get('channelService');
-	var param = {
-		route: 'onChat',
-		msg: msg.content,
-		from: username,
-		target: msg.target
-	};
-	channel = channelService.getChannel(rid, false);
+	if(msg.type==="move"){
+        var param = {
+            route: 'messageMoveReceived',
+            currentPlayerIndex: msg.currentPlayerIndex,
+            pawnUpdateIndex: msg.pawnUpdateIndex,
+            selectedIndexInTable: msg.selectedIndexInTable,
+            target: msg.target
+        };
 
-	//the target is all users
-	if(msg.target == '*') {
-		channel.pushMessage(param);
+	}else{
+        var param = {
+            route: 'messageDiceReceived',
+            value: msg.value,
+            target: msg.target
+        };
 	}
+
+	var channel = channelService.getChannel(rid, false);
+
+
 	//the target is specific user
 	else {
 		var tuid = msg.target + '*' + rid;
