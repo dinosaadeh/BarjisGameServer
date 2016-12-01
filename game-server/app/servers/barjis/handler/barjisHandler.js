@@ -1,11 +1,11 @@
 var barjisRemote = require('../remote/barjisRemote');
 
-module.exports = function(app) {
-	return new Handler(app);
+module.exports = function (app) {
+    return new Handler(app);
 };
 
-var Handler = function(app) {
-	this.app = app;
+var Handler = function (app) {
+    this.app = app;
 };
 
 var handler = Handler.prototype;
@@ -18,12 +18,14 @@ var handler = Handler.prototype;
  * @param  {Function} next next stemp callback
  *
  */
-handler.send = function(msg, session, next) {
-	var rid = session.get('rid');
-	var username = session.uid.split('*')[0];
-	var channelService = this.app.get('channelService');
-	if(msg.type==="move"){
-        var param = {
+handler.send = function (msg, session, next) {
+    var rid = session.get('rid');
+    var username = session.uid.split('*')[0];
+    var channelService = this.app.get('channelService');
+    var param;
+    if (msg.type === "move") {
+
+        param = {
             route: 'messageMoveReceived',
             currentPlayerIndex: msg.currentPlayerIndex,
             pawnUpdateIndex: msg.pawnUpdateIndex,
@@ -31,27 +33,35 @@ handler.send = function(msg, session, next) {
             target: msg.target
         };
 
-	}else{
-        var param = {
-            route: 'messageDiceReceived',
-            value: msg.value,
-            target: msg.target
-        };
-	}
+    } else {
+        if (msg.type === "dice") {
 
-	var channel = channelService.getChannel(rid, false);
+            param = {
+                route: 'messageDiceReceived',
+                value: msg.value,
+                target: msg.target
+            };
+        }
+        else {
+            param = {
+                route: 'myTurn',
+                target: msg.target
+            };
+
+        }
+    }
+
+    channel = channelService.getChannel(rid, false);
 
 
-	//the target is specific user
-	else {
-		var tuid = msg.target + '*' + rid;
-		var tsid = channel.getMember(tuid)['sid'];
-		channelService.pushMessageByUids(param, [{
-			uid: tuid,
-			sid: tsid
-		}]);
-	}
-	next(null, {
-		route: msg.route
-	});
+    var tuid = msg.target + '*' + rid;
+    var tsid = channel.getMember(tuid)['sid'];
+    channelService.pushMessageByUids(param, [{
+        uid: tuid,
+        sid: tsid
+    }]);
+
+    next(null, {
+        route: msg.route
+    });
 };
